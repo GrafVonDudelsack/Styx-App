@@ -22,7 +22,7 @@ public class RegisterGUI extends JFrame{
 	
 	private static final long serialVersionUID = 1L;
 	
-	Color orange = Manager.orange;
+	Color blue = Manager.blue;
 	
 	
 	
@@ -36,10 +36,10 @@ public class RegisterGUI extends JFrame{
 		
 		
 		
-		panel_west.setBackground(orange);
+		panel_west.setBackground(blue);
 		panel_west.setSize(new Dimension((int) ((double) this.getWidth() * 0.27), this.getHeight()));
 		
-		ImageIcon icon_logo = new ImageIcon(Toolkit.getDefaultToolkit().getImage(getClass().getResource("logo_test.png")));
+		ImageIcon icon_logo = new ImageIcon(Toolkit.getDefaultToolkit().getImage(getClass().getResource("carl_logo.png")));
 		JLabel label_icon_logo = new JLabel();
 		label_icon_logo.setBounds(panel_west.getWidth()/2 - icon_logo.getIconWidth()/2, panel_west.getHeight()/2 - icon_logo.getIconHeight()/2, icon_logo.getIconWidth(), icon_logo.getIconHeight());
 		label_icon_logo.setIcon(icon_logo);
@@ -139,7 +139,7 @@ public class RegisterGUI extends JFrame{
 		register_button.setFocusPainted(false);
 		register_button.setFont(new Font("Tahoma", Font.PLAIN, 32));
 		register_button.setForeground(Manager.ct.getBackground());
-		register_button.setBackground(orange);
+		register_button.setBackground(blue);
 		register_button.setBounds(entry_x, password_text.getY() + 80, 220, 60);
 		getContentPane().add(register_button);
 		
@@ -148,14 +148,15 @@ public class RegisterGUI extends JFrame{
 		login_button.setBorderPainted(false);
 		login_button.setFocusPainted(false);
 		login_button.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		login_button.setForeground(orange);
+		login_button.setForeground(blue);
 		login_button.setBackground(Manager.ct.getBackground());
 		login_button.setBounds(password_text.getX() + password_text.getWidth() - 185, register_button.getY(), 200, 60);
 		login_button.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				Manager.changeJFrame("login");
+				if((JButton) e.getSource() == login_button)
+					Manager.changeJFrame("login");
 			}
 		});
 		getContentPane().add(login_button);
@@ -163,7 +164,7 @@ public class RegisterGUI extends JFrame{
 		
 		
 		
-		JToggleButton jb_bc = new JToggleButton();
+		/*JToggleButton jb_bc = new JToggleButton();
 		ImageIcon bct_icon = new ImageIcon(Toolkit.getDefaultToolkit().getImage(getClass().getResource("bright_color_theme_logo.png")));
 		ImageIcon dct_icon = new ImageIcon(Toolkit.getDefaultToolkit().getImage(getClass().getResource("dark_color_theme_logo.png")));
 		jb_bc.setBounds(this.getWidth() - bct_icon.getIconWidth() - 35, 35, bct_icon.getIconWidth(), bct_icon.getIconHeight());
@@ -172,41 +173,43 @@ public class RegisterGUI extends JFrame{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				
-				Manager.switchColorTheme();
-				
-				if(Manager.ct == ColorTheme.BRIGHT) {
-					jb_bc.setIcon(dct_icon);
-				}else {
-					jb_bc.setIcon(bct_icon);
+				if((JToggleButton) e.getSource() == jb_bc) {
+					Manager.switchColorTheme();
+					
+					if(Manager.ct == ColorTheme.BRIGHT) {
+						jb_bc.setIcon(dct_icon);
+					}else {
+						jb_bc.setIcon(bct_icon);
+					}
+	
+					panel_east.setBackground(Manager.ct.getBackground());
+					
+					fn_text.setForeground(Manager.ct.getForeground());
+					fn_field.setForeground(Manager.ct.getForeground());
+					fn_field.setBackground(Manager.ct.getBackground());
+					fn_separator.setForeground(Manager.ct.getForeground());
+					fn_separator.setBackground(Manager.ct.getForeground());
+					
+					ln_text.setForeground(Manager.ct.getForeground());
+					ln_field.setForeground(Manager.ct.getForeground());
+					ln_field.setBackground(Manager.ct.getBackground());
+					ln_separator.setForeground(Manager.ct.getForeground());
+					ln_separator.setBackground(Manager.ct.getForeground());
+					
+					email_text.setForeground(Manager.ct.getForeground());
+					email_field.setForeground(Manager.ct.getForeground());
+					email_field.setBackground(Manager.ct.getBackground());
+					email_separator.setForeground(Manager.ct.getForeground());
+					email_separator.setBackground(Manager.ct.getForeground());
+					
+					password_text.setForeground(Manager.ct.getForeground());
+	
+					register_button.setForeground(Manager.ct.getBackground());
+					login_button.setBackground(Manager.ct.getBackground());
+					
+					
+					getContentPane().repaint();
 				}
-
-				panel_east.setBackground(Manager.ct.getBackground());
-				
-				fn_text.setForeground(Manager.ct.getForeground());
-				fn_field.setForeground(Manager.ct.getForeground());
-				fn_field.setBackground(Manager.ct.getBackground());
-				fn_separator.setForeground(Manager.ct.getForeground());
-				fn_separator.setBackground(Manager.ct.getForeground());
-				
-				ln_text.setForeground(Manager.ct.getForeground());
-				ln_field.setForeground(Manager.ct.getForeground());
-				ln_field.setBackground(Manager.ct.getBackground());
-				ln_separator.setForeground(Manager.ct.getForeground());
-				ln_separator.setBackground(Manager.ct.getForeground());
-				
-				email_text.setForeground(Manager.ct.getForeground());
-				email_field.setForeground(Manager.ct.getForeground());
-				email_field.setBackground(Manager.ct.getBackground());
-				email_separator.setForeground(Manager.ct.getForeground());
-				email_separator.setBackground(Manager.ct.getForeground());
-				
-				password_text.setForeground(Manager.ct.getForeground());
-
-				register_button.setForeground(Manager.ct.getBackground());
-				login_button.setBackground(Manager.ct.getBackground());
-				
-				
-				getContentPane().repaint();
 			}
 		});
 		if(Manager.ct == ColorTheme.DARK) {
@@ -216,7 +219,7 @@ public class RegisterGUI extends JFrame{
 		}
 		jb_bc.setBorderPainted(false);
 		jb_bc.setFocusPainted(false);
-		getContentPane().add(jb_bc);
+		getContentPane().add(jb_bc);*/
 		
 		
 		getContentPane().add(panel_east);

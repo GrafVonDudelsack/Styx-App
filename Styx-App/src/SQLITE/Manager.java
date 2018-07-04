@@ -13,6 +13,7 @@ public class Manager {
 	
 	public static void addUser(Integer UserID, String forename, String name, String status, String email) {
 		sqlite.update("INSERT INTO Users (USER_ID, FORENAME, NAME, STATUS, EMAIL) VALUES ('" + UserID + "', '" + forename + "', '" + name + "', '" + status + "', '" + email + "')");
+		Loader.addUser(UserID, forename, name, status, email);
 	}
 	
 	public static void removeUser(Integer UserID) {
@@ -31,7 +32,7 @@ public class Manager {
 		
 	}
 	
-	public static ArrayList<String> getUserData(Integer UserID) {
+	/*public static ArrayList<String> getUserData(Integer UserID) {
 		ArrayList<String> data = new ArrayList<>();
 		
 		ResultSet rs = sqlite.getResult("SELECT * FROM Users WHERE USER_ID = '" + UserID + "'");
@@ -64,41 +65,71 @@ public class Manager {
 			e.printStackTrace();
 		}
 		return ids;
-	}
+	}*/
 	
-	
-	public static void addMessage(Integer SenderID, Integer GroupID, Timestamp Time, byte[] message, String type) {
-		sqlite.update("INSERT INTO Messages (SENDER_ID, GROUP_ID, TIME, MESSAGE, TYPE) VALUES ('" + SenderID + "', '" + GroupID + "', '" + Time + "', '" + message + "', '" + type + "')");
-	}
-	
-	public static ArrayList<Message> getMessages(Integer GroupID) {
-		ArrayList<Message> messages = new ArrayList<>();
-		ResultSet rs = sqlite.getResult("SELECT * FROM Messages WHERE GROUP_ID = '" + GroupID + "' ORDER BY ID DESC'");
-		ResultSet rs2 = sqlite.getResult("SELECT * FROM MESSAGES WHERE GROUP_ID = '" + GroupID + "'");
+	public static ArrayList<User> getAllUserData() {
+		ArrayList<User> data = new ArrayList<>();
+		
+		ResultSet rs = sqlite.getResult("SELECT * FROM Users");
 		
 		try {
-			
-			if(rs.next() && rs2.next()) {
-				rs.beforeFirst();
-				rs.first();
-				rs2.beforeFirst();
-				rs2.next();
-				
-				Integer SenderID = rs.getInt("SENDER_ID");
-				Message message = new Message(SenderID, GroupID, rs.getTimestamp("TIME"), rs.getBytes("MESSAGE"), rs.getString("TYPE"));
-				messages.add(message);
-			}else {
-				return null;
+			while(rs.next()) {
+				User user = new User(rs.getInt("USER_ID"), rs.getString("FORENAME"), rs.getString("NAME"), rs.getString("STATUS"), rs.getString("EMAIL"));
+				data.add(user);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		
-		return messages;
+		return data;
+	}
+	
+	
+	public static void addMessage(Integer SenderID, Integer GroupID, Timestamp Time, byte[] message, String type) {
+		sqlite.update("INSERT INTO Messages (SENDER_ID, GROUP_ID, TIME, MESSAGE, TYPE) VALUES ('" + SenderID + "', '" + GroupID + "', '" + Time + "', '" + message + "', '" + type + "')");
+		Loader.addMessage(Loader.getUserByID(SenderID), Loader.getGroupByID(GroupID), Time, message, type);
+	}
+	
+	public static void addGroup(Integer groupID, String groupname, ArrayList<User> users) {
+		for(User user : users) {
+			sqlite.update("INSERT INTO groups_users (USER_ID, GROUP_ID, GROUP_NAME) VALUES ('" + user.userID + "', '" + groupID + "', '" + groupname + "')");
+		}
+		Loader.addGroup(groupID, groupname, users);
+	}
+	
+	public static void removeGroup(Group group) {
+		sqlite.update("DELETE FROM groups_users WHERE GROUP_ID = '" + group.groupID + "'");
+	}
+	
+	public static void removeFromGroup(Group group, User user) {
+		sqlite.update("DELETE FROM groups_users WHERE GROUP_ID = '" + group.groupID + "' AND USER_ID = '" + user.userID + "'");
+	}
+	
+	public static ArrayList<Message> getAllMessages() {
+		ArrayList<Message> data = new ArrayList<>();
+		
+		ResultSet rs = sqlite.getResult("SELECT * FROM Messages");
+		
+		try {
+			while(rs.next()) {
+				User user = Loader.getUserByID(rs.getInt("SENDER_ID"));
+				Group group = Loader.getGroupByID(rs.getInt("GROUP_ID"));
+				Timestamp time = rs.getTimestamp("TIM");
+				byte[] msg = rs.getBytes("MESSAGE");
+				String type = rs.getString("TYPE");
+				
+				Message message = new Message(user, group, time, msg, type);
+				data.add(message);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return data;
 	}
 	
 	public static ArrayList<Integer> getAllGroupIDs() {
-		ResultSet rs = sqlite.getResult("SELECT GROUP_ID GROM Users");
+		ResultSet rs = sqlite.getResult("SELECT GROUP_ID FROM groups_users");
 		ArrayList<Integer> ids = new ArrayList<>();
 		try {
 			while(rs.next()) {
@@ -113,4 +144,27 @@ public class Manager {
 		return ids;
 	}
 	
+	public static ArrayList<Group> getAllGroupData() {
+		ArrayList<Group> data = new ArrayList<>();
+		ArrayList<Integer> groupIDs = getAllGroupIDs();
+		
+		try {
+			for(Integer id : groupIDs) {
+				ResultSet rs = sqlite.getResult("SELECT * FROM groups_users WHERE GROUP_ID = '" + id + "'");
+				String name = rs.getString("GROUP_NAME");
+				ArrayList<User> users = new ArrayList<>();
+				
+				while(rs.next()) {
+					users.add(Loader.getUserByID(rs.getInt("USER_ID")));
+				}
+				
+				Group group = new Group(id, name, users);
+				data.add(group);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return data;
+	}
 }
