@@ -12,6 +12,7 @@ public class Controller {
 	
 	public static boolean log_in(String email, String password) {
 		//NUR ZU TEST ZWECKEN -> Noch nicht fertig
+		//WICHTIG Falls Positiv: UserID vom Server getten und in der Main bei lastUserID eintragen
 		
 		byte[] crypted_password = Security.ByteArrayVerschlüsseln(password.getBytes(), email);
 		
