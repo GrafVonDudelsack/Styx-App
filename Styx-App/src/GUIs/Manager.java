@@ -4,24 +4,21 @@ import java.awt.Color;
 import java.awt.ComponentOrientation;
 import java.awt.Container;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
-import java.awt.Image;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
-import javax.swing.Box;
-import javax.swing.GrayFilter;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JPopupMenu;
+import javax.swing.JToggleButton;
 import javax.swing.SwingConstants;
-
 import Main.Main;
 
 public class Manager {
@@ -33,7 +30,7 @@ public class Manager {
 	public static Color blue = new Color(114, 137, 218);//public static Color orange = new Color(232,73,29);
 	public static Color transparent = new Color(0,0,0,0);
 	public static Color white = new Color(225, 225, 225);
-	public static Color light_gray = new Color(153, 170, 181);
+	public static Color light_gray = new Color(203, 220, 231);
 	public static Color dark_shade = new Color(35,39,42, 120);
 	public static Color bright_shade = new Color(225,225,225,20);
 	public static Color light_dark = new Color(127, 129, 132);
@@ -57,8 +54,10 @@ public class Manager {
 	};
 	static JMenuItem exit = new JMenuItem("");
 	static JMenuItem minimize = new JMenuItem("");
-	static JMenuItem logout = new JMenuItem("");
 	static JMenuItem settings = new JMenuItem("");
+	static JMenuItem logout = new JMenuItem("");
+	static JPopupMenu settings_menu = new JPopupMenu();
+	static JToggleButton colortheme = new JToggleButton("");
 	
 	/**
 	 * JFrames
@@ -67,6 +66,8 @@ public class Manager {
 	static Container login = new LoginGUI().getContentPane();
 	static Container register = new RegisterGUI().getContentPane();
 	static Container main = new MainGUI().getContentPane();
+	static Container create = new CreateGroupGUI().getContentPane();
+	static String activePane = "";
 	
 	private static void initialiseJMenuBar() {
 		menu.setBackground(transparent);
@@ -155,50 +156,6 @@ public class Manager {
 		minimize.setMinimumSize(new Dimension(55, 55));
 		menu.add(minimize);
 		
-		//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		
-		logout.setBackground(menu.getBackground());
-		logout.setForeground(null);
-		logout.setIcon(new ImageIcon(Manager.class.getResource("/GUIs/LogOut.png")));
-		logout.setBorderPainted(false);
-		logout.setFocusPainted(true);
-		logout.addMouseListener(new MouseListener() {
-			
-			@Override
-			public void mouseReleased(MouseEvent e) {	
-			}
-			
-			@Override
-			public void mousePressed(MouseEvent e) {	
-			}
-			
-			@Override
-			public void mouseExited(MouseEvent e) {	
-				logout.setBackground(menu.getBackground());
-			}
-			
-			@Override
-			public void mouseEntered(MouseEvent e) {
-				logout.setBackground(light_dark);
-			}
-			
-			@Override
-			public void mouseClicked(MouseEvent e) {	
-			}
-		});
-		logout.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				if((JMenuItem) e.getSource() == logout)
-					logout.setBackground(white);
-					reduceMenu();
-					changeJFrame("login");
-			}
-		});
-		logout.setMaximumSize(new Dimension(55, 55));
-		logout.setMinimumSize(new Dimension(55, 55));
-		
 		
 		//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		
@@ -235,15 +192,60 @@ public class Manager {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if((JMenuItem) e.getSource() == settings)
-					System.out.println("SETTINGS");
+				settings_menu.show(settings, 0, settings.getHeight());
 			}
 		});
 		settings.setMaximumSize(new Dimension(55, 55));
 		settings.setMinimumSize(new Dimension(55, 55));
+		menu.add(settings);
+		
+		//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+				
+		logout.setBackground(menu.getBackground());
+		logout.setForeground(null);
+		logout.setIcon(new ImageIcon(Manager.class.getResource("/GUIs/LogOut.png")));
+		logout.setBorderPainted(false);
+		logout.setFocusPainted(true);
+		logout.addMouseListener(new MouseListener() {
+		
+		@Override
+		public void mouseReleased(MouseEvent e) {	
+		}
+		
+		@Override
+		public void mousePressed(MouseEvent e) {	
+		}
+		
+		@Override
+		public void mouseExited(MouseEvent e) {	
+		logout.setBackground(menu.getBackground());
+		}
+		
+		@Override
+		public void mouseEntered(MouseEvent e) {
+		logout.setBackground(light_dark);
+		}
+		
+		@Override
+		public void mouseClicked(MouseEvent e) {	
+		}
+		});
+		logout.addActionListener(new ActionListener() {
+		
+		@Override
+		public void actionPerformed(ActionEvent e) {
+		if((JMenuItem) e.getSource() == logout)
+		logout.setBackground(white);
+		reduceMenu();
+		changeJFrame("login");
+		}
+		});
+		logout.setMaximumSize(new Dimension(55, 55));
+		logout.setMinimumSize(new Dimension(55, 55));
 		
 		
 		//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+		
 		
 		menu.applyComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
 		menu.setBackground(white);
@@ -268,6 +270,44 @@ public class Manager {
 							
 		     }
 		});
+		
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+		
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+		settings_menu.setLocation(settings.getX(), settings.getHeight());
+		settings_menu.setBorderPainted(false);
+		
+		colortheme.setOpaque(true);
+		colortheme.setHorizontalTextPosition(SwingConstants.CENTER);
+		colortheme.setBackground(blue);
+		if(ct == ColorTheme.BRIGHT) {
+		colortheme.setText("  Hell  ");
+		colortheme.setForeground(ColorTheme.DARK.getForeground());
+		}else {
+			colortheme.setText(" Dunkel ");
+		colortheme.setForeground(ColorTheme.BRIGHT.getForeground());
+		}
+		colortheme.setMinimumSize(new Dimension(200, 50));
+		colortheme.setBorderPainted(false);
+		colortheme.setFocusPainted(false);
+		colortheme.setFont(new Font("Lucida Sans Unicode", Font.PLAIN, 22));
+		colortheme.addActionListener(new ActionListener() {
+		
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				switchColorTheme();
+				if(ct == ColorTheme.BRIGHT) {
+					colortheme.setText("  Hell  ");
+					colortheme.setForeground(ColorTheme.DARK.getForeground());
+				}else {
+					colortheme.setText(" Dunkel ");
+					colortheme.setForeground(ColorTheme.BRIGHT.getForeground());
+				}
+			}
+		});
+		
+		settings_menu.add(colortheme);
+		settings_menu.setVisible(false);
 	}
 	
 	public static void openJFrame() {
@@ -279,6 +319,7 @@ public class Manager {
 		
 		frame.setJMenuBar(menu);
 		
+		activePane = "login";
 		frame.setContentPane(login);
 		
 		frame.pack();
@@ -286,6 +327,7 @@ public class Manager {
     }  
 	
 	public static void changeJFrame(String frame_typ) {
+		activePane = frame_typ;
 		if(frame_typ.equalsIgnoreCase("login")) {
 			frame.setContentPane(login);
 		}
@@ -295,29 +337,35 @@ public class Manager {
 		if(frame_typ.equalsIgnoreCase("main")) {
 			frame.setContentPane(main);
 			completeMenu();
-			//Data
+		}
+		if(frame_typ.equalsIgnoreCase("create")) {
+			frame.setContentPane(create);
 		}
 		frame.getContentPane().revalidate();
 		frame.getContentPane().repaint();
 		menu.revalidate();
-		Graphics g = menu.getGraphics();
 		menu.repaint();
 	}
 	
 	public static void switchColorTheme() {
 		if(ct == ColorTheme.BRIGHT) {
-			ct = ColorTheme.DARK;
+			Main.ct = ColorTheme.DARK;
 		}else {
-			ct = ColorTheme.BRIGHT;
+			Main.ct = ColorTheme.BRIGHT;
 		}
 		
-		reloadContentPanes();
+		ct = Main.ct;
+		
+		reloadContentPanes(activePane);
 	}
 
-	public static void reloadContentPanes() {
+	public static void reloadContentPanes(String pane) {
 		login = new LoginGUI().getContentPane();
 		register = new RegisterGUI().getContentPane();
 		main = new MainGUI().getContentPane();
+		create = new CreateGroupGUI().getContentPane();
+		
+		changeJFrame(pane);
 	}
 	
 	public static void completeMenu() {

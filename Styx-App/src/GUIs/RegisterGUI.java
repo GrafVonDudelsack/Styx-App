@@ -12,11 +12,11 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JPasswordField;
 import javax.swing.JSeparator;
 import javax.swing.JTextField;
-import javax.swing.JToggleButton;
 import javax.swing.SwingConstants;
+
+import Main.Controller;
 
 public class RegisterGUI extends JFrame{
 	
@@ -141,6 +141,25 @@ public class RegisterGUI extends JFrame{
 		register_button.setForeground(Manager.ct.getBackground());
 		register_button.setBackground(blue);
 		register_button.setBounds(entry_x, password_text.getY() + 80, 220, 60);
+		register_button.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				String email = email_field.getText();
+				String forename = fn_field.getText();
+				String lastname = ln_field.getText();
+				
+				//Valid email check
+				
+				if(!email.contains("@") || !email.contains(".")) {
+					email_separator.setBackground(Color.RED);
+					return;
+				}
+				
+				if(Controller.register(forename, lastname, email))
+					Manager.changeJFrame("login");
+			}
+		});
 		getContentPane().add(register_button);
 		
 		JButton login_button = new JButton("Bereits registriert?");

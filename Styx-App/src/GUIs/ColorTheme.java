@@ -6,8 +6,8 @@ public enum ColorTheme {
 	
 	
 	
-	BRIGHT(44, 47, 51, 153, 170, 181),
-	DARK(153, 170, 181, 44, 47, 51);
+	BRIGHT(44, 47, 51, 203, 220, 231),
+	DARK(203, 220, 231, 44, 47, 51);
 	
 	int foreground_r; int foreground_g; int foreground_b; int background_r; int background_g; int background_b;
 	

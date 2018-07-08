@@ -1,5 +1,7 @@
 package Main;
 
+import java.util.ArrayList;
+
 public class Controller {
 	
 	/**NACH ALLEN NEU HINZUGEFÜGTEN DATEN MUSS DER LOADER RE-INITILISED WERDEN
@@ -19,6 +21,15 @@ public class Controller {
 		//Send
 		
 		return Main.logged_in = true;
+	}
+	
+	public static boolean register(String forename, String lastname, String email) {
+		return true;
+	}
+	
+	public static void createGroup(String groupname, ArrayList<String> user_emails) {
+		//ID und Userdata vom server getten und in DB einfügen
+		//Falls online: In Loader adden und GUIManager 
 	}
 	
 }

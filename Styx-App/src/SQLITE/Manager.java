@@ -6,6 +6,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 
 import Main.Main;
+import Main.Security;
 
 public class Manager {
 	
@@ -116,6 +117,7 @@ public class Manager {
 				Group group = Loader.getGroupByID(rs.getInt("GROUP_ID"));
 				Timestamp time = rs.getTimestamp("TIM");
 				byte[] msg = rs.getBytes("MESSAGE");
+				msg = Security.ByteArrayEntschlüsseln(msg, rs.getInt("SENDER_ID") + "");
 				String type = rs.getString("TYPE");
 				
 				Message message = new Message(user, group, time, msg, type);
