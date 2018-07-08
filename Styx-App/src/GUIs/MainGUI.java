@@ -22,6 +22,7 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.MatteBorder;
 
+import Main.Controller;
 import Main.Main;
 import SQLITE.Group;
 import SQLITE.Loader;
@@ -227,6 +228,8 @@ public class MainGUI extends JFrame{
 					
 					String s = Loader.getUserByID(Main.activeUserID).userID + ":";
 					chat.append("\n" + s + "\n" + msg + "\n");
+					
+					Controller.sendMessage(Loader.activeGroup, msg);
 				}
 			}
 		});
@@ -265,6 +268,16 @@ public class MainGUI extends JFrame{
 	public void refreshGroups() {
 		groups = Loader.groups;
 		initGroups();
+	}
+	
+	public void addMessage(Message msg) {
+		if(msg != null) {
+			String s = msg.Sender.forename + " " + msg.Sender.lastname + ":";
+			chat.append("\n" + s + "\n" + new String(msg.message) + "\n");
+			chat_scroll.getVerticalScrollBar().setValue(chat_scroll.getVerticalScrollBar().getMaximum());
+		} else {
+			System.out.println("ERROR");
+		}
 	}
 	
 	public void initMessages(Group group) {

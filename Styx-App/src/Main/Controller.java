@@ -2,6 +2,8 @@ package Main;
 
 import java.util.ArrayList;
 
+import SQLITE.Group;
+
 public class Controller {
 	
 	/**NACH ALLEN NEU HINZUGEFÜGTEN DATEN MUSS DER LOADER RE-INITILISED WERDEN
@@ -30,6 +32,14 @@ public class Controller {
 	public static void createGroup(String groupname, ArrayList<String> user_emails) {
 		//ID und Userdata vom server getten und in DB einfügen
 		//Falls online: In Loader adden und GUIManager 
+	}
+	
+	public static void sendMessage() {
+		
+	}
+
+	public static void sendMessage(Group activeGroup, String msg) {
+		
 	}
 	
 }
